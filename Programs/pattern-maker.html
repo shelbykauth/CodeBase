@@ -4,10 +4,10 @@
     <title>Shelby Kauth | (DragonScale) Pattern Maker</title>
     <meta charset="UTF-8">
     <meta name="author" content="Shelby Kauth">
-    <meta name="version" content="0.1">
+    <meta name="version" content="0.1.1">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-    <script src="assets/pattern-maker.js"></script>
-    <!--Yes, I am fully aware of the spaghetti code.  I wrote this in one night driven by insomnia.-->
+    <script src="assets/pattern-maker.js?version=0.1.1"></script>
+    <!--Yes, I am fully aware of the spaghetti code.  I wrote this in one night driven by insomnia.  (Plus 1 Day of Debugging)-->
     <style>
         canvas {
             border: 2px solid black;
@@ -22,16 +22,33 @@
         }
         p {
             max-width: 40em;
-            margin: 0 auto 0 auto;
+            margin: 0;
+        }
+        article.hidden p {
+            display: none;
+        }
+        input[type='number'] {
+            width: 3em;
+        }
+        body, input, select {
+            font-size: 3vh;
         }
     </style>
 </head>
 <body>
-    <p>Click on the Canvas (or most the buttons) to regenerate the pattern.</p>
-    <p>Adding in the same color multiple times will increase that color's proportion.</p>
+    <article id="about" class="hidden">
+        <h2>About</h2>
+        <b><p>Shelby Kauth &copy Feb 2017</p></b>
+        <p>I hope you enjoy.  Email me any bugs, feature requests, etc at shelbykauth@gmail.com, but don't be insulted if I don't take your ideas, or if I don't continue this project.</p>
+        <p>I half-heartedly intend to continue this.  If you have ideas for other patterns I should make (simple ones! Not Fractals!), you can include that in the email.</p>
+        <b>
+            <p>Click on the Canvas (or most the controls) to regenerate the pattern.</p>
+            <p>The number associated with a color determines how frequently it is picked.</p>
+            <p>Choose from 1 to 20 to pick the proportion (like 1 part red, 2 parts gold, 1 part really dark gray).</p>
+            <p>Choosing 0 will keep the color in the list, but it will not show up.</p>
+            <p>Choosing -1 will remove the color from the list.</p>
+        </b>
+    </article>
     <article id="pattern_maker"><canvas height=500 width=500 /></article>
-    <p>Shelby Kauth &copy Feb 2017</p>
-    <p>I hope you enjoy.  Email me any bugs, feature requests, etc at shelbykauth@gmail.com, but don't be insulted if I don't take your ideas, or if I don't continue this project.</p>
-    <p>I half-heartedly intend to continue this.  If you have ideas for other patterns I should make (simple ones! Not Fractals!), you can include that in the email.</p>
 </body>
 </html>
