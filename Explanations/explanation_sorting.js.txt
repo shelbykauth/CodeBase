@@ -1,0 +1,252 @@
+/*************************
+ *       JavaScript       
+ * Array.prototype.sort() 
+/*************************
+ * Reference At:
+ * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
+/*************************
+ * Best to read in Notepad++
+ * ALWAYS TEST THE CODE
+ * This is not production-ready code.
+ * This is a tutorial, because I am lazy.
+ * This code has been typed manually and has not been tested for typos.
+/*************************
+ * Basic stuff up top.
+ * Complex stuff down below.
+ * If you get lost, go back to the top, and read the comments.
+/*************************
+ * Outline:
+ * 029-053 - default sorting function
+ * 058-101 - basic numeric and alphabetizing sorts
+ * 099     - ascending v descending
+ * 103-251 - array of objects
+ * 140-158 --- method1 (Copy, Paste, Tweak)
+ * 160-207 --- method2 (A function to return a reusable function)
+ * 209-251 --- method3 (Sort gets called inside your function)
+/*************************/
+// Have Fun! //
+
+//arr.sort() modifies the original array.
+//arr = arr.sort() unneeded.
+
+var arr1 = [6, 3, 5, 2];
+var arr2 = [6, 2, 50,2];
+
+arr1.sort() // [2,3,5,6];
+arr2.sort() // [2,3,50,6];
+
+// This is because .sort() without a parameter defaults to... basically this:
+    
+function defaultSort(a,b) {
+    var strA = new String(a);
+    var strB = new String(b);
+    if (strA < strB) return -1;
+    if (strA > strB) return 1;
+    return 0; // strA == strB
+}
+
+new String(null) == "null";
+new String() == ""
+new String(50) == "50"
+
+/*
+    The default function is also not ideal for alphabetizing.
+    "Broccolli" comes before "Cheese", as expected.
+    "Broccolli" also comes before "apple",
+    because lower case letters come after upper case letters.
+
+    So you always want to define your sorting function.
+*/
+
+function sortNumbers(a,b) {
+    var A = parseFloat(a);
+    var B = parseFloat(b);
+    if (A < B) return -1;
+    if (A > B) return 1;
+    return 0;
+}
+function sortAlphabetize(a,b) {
+    var A = new String(a).toLowerCase();
+    var B = new String(b).toLowerCase();
+    if (A < B) return -1;
+    if (A > B) return 1;
+    return 0;
+}
+// These functions are used as a parameter to Array.prototype.sort()
+
+var food = ["Carrot","apple","banana"];
+var ages = [23, 102, 9, 18, 30, 50.3];
+
+food.sort(sortNumbers);
+ages.sort(sortAlphabetize);
+// That's the code-reuse method.  But not all code can be reused as is.
+// Here we have the copy, paste, tweak method.
+ages.sort(function(a,b) {
+    var A = parseFloat(a);
+    var B = parseFloat(b);
+    if (A < B) return -1;
+    if (A > B) return 1;
+    return 0;
+});
+food.sort(function(a,b) {
+    var A = new String(a).toLowerCase();
+    var B = new String(b).toLowerCase();
+    if (A < B) return -1;
+    if (A > B) return 1;
+    return 0;
+});
+
+// If you wanted descending order, just swap -1 and 1 or > and <.
+
+//Yes, I realize I just sorted these arrays twice.  That's okay.
+
+/*
+    But what about sorting objects?
+    I really hope you mean sorting an array of objects,
+        by a property present on all such objects
+    Such as...
+*/
+var people = [
+    {"name":"darla", "age":23, "Occupation": "Drywaller"},
+    {"name":"Bob", "age":"18", "Occupation": "Student"},
+    {"name":"Alice", "age":102, "Occupation": "retired"},
+    {"name":"evaline", "age":9, "Occupation": "student"},
+    {"name":"Carol", "age":30, "Occupation": "Retired early!"}
+]
+// If you notice, I've included some strings in the number field,
+    // different-lengthed numbers, and different capitalizations.
+
+function sortFieldNumbers(a,b) {
+    var A = parseFloat(a[field]);
+    var B = parseFloat(b[field]);
+    if (A < B) return -1;
+    if (A > B) return 1;
+    return 0;
+}
+function sortFieldAlphabet(a,b) {
+    var A = new String(a[field]).toLowerCase();
+    var B = new String(b[field]).toLowerCase();
+    if (A < B) return -1;
+    if (A > B) return 1;
+    return 0;
+}
+
+/*
+    And this is where code reuse gets tricky.
+    There's no way to pass 'field' into that function.
+    So, there are three ways to do this.
+*/
+
+// 1) Copy, Paste, Tweak
+
+people.sort(a,b) { //ascending, youngest to oldest
+    var A = parseFloat(a.age);
+    var B = parseFloat(b.age);
+    if (A < B) return -1;
+    if (A > B) return 1;
+    return 0;
+}
+people.sort(a,b) { //descending, longest names to shortest names
+    var A = a.name.length;
+    var B = a.name.length;
+    if (A < B) return 1;
+    if (A > B) return -1;
+    return 0;
+    
+}
+//or whatever way you use this thing.  I'm not typing it all out.
+
+
+// 2) Write a function that returns a function.
+
+function writeSort(field, isDescending, type) {
+    function fSort (a,b) {
+        switch (type) {
+            case "alphabet":
+                var A = new String(a[field]).toLowerCase();
+                var B = new String(b[field]).toLowerCase();
+            break;
+            case "number":
+                var A = parseFloat(a[field]);
+                var B = parseFloat(b[field]);
+            break;
+            case "length":
+                var A = a[field].length;
+                var B = b[field].length;
+            break;
+            //etc.
+            //whatever else you can think of.
+            default:
+                var A = parseFloat(a[field]);
+                var B = parseFloat(b[field]);
+                if (isNaN(A) || isNaN(B)) {
+                    A = new String(a[field]).toLowerCase();
+                    B = new String(b[field]).toLowerCase();
+                }
+            break;
+        }
+        var m = isDescending ? 1 : -1; //multiplyer
+        if (A < B) return -1 * multiplyer;
+        if (A > B) return 1 * multiplyer;
+        return 0;
+    }
+    return fSort;
+}
+people.sort(writeSort("age", true, "number")); // oldest to youngest
+people.sort(writeSort("age", false, "number")); //youngest to oldest
+people.sort(writeSort("occupation", false, "alphabet")); // a->z occupation
+people.sort(writeSort("occupation", true, "alphabet")); //  z->a occupation
+people.sort(writeSort("occupation", false, "length")); // shortest occupationto longest
+people.sort(writeSort("name", false, "length")); // shortest name to longest name
+
+// Best use for this...
+var oldToYoung = writeSort("age", true, "number");
+people.sort(oldToYoung);
+people2.sort(oldToYoung);
+people3.sort(oldToYoung);
+//etc.
+
+// 3) Wrap call to sort inside function
+
+function performSort(array, field, isDescending, type) {
+    array.sort(function(a,b) {
+        switch (type) {
+            case "alphabet":
+                var A = new String(a[field]).toLowerCase();
+                var B = new String(b[field]).toLowerCase();
+            break;
+            case "number":
+                var A = parseFloat(a[field]);
+                var B = parseFloat(b[field]);
+            break;
+            case "length":
+                var A = a[field].length;
+                var B = b[field].length;
+            break;
+            //etc.
+            //whatever else you can think of.
+            default: // Tries to sort it numerically.  If not a number, sorts alphabetically.
+                var A = parseFloat(a[field]);
+                var B = parseFloat(b[field]);
+                if (isNaN(A) || isNaN(B)) {
+                    A = new String(a[field]).toLowerCase();
+                    B = new String(b[field]).toLowerCase();
+                }
+            break;
+        }
+        var m = isDescending ? 1 : -1; //multiplyer
+        if (A < B) return -1 * multiplyer;
+        if (A > B) return 1 * multiplyer;
+        return 0;
+    }
+    return array;
+}
+
+performSort(people, "age", true, "number")); // oldest to youngest
+performSort(people, "age", false, "number")); //youngest to oldest
+performSort(people, "occupation", false, "alphabet")); // a->z occupation
+performSort(people, "occupation", true, "alphabet")); //  z->a occupation
+performSort(people, "occupation", false, "length")); // shortest occupationto longest
+performSort(people, "name", false, "length")); // shortest name to longest name
+//etc.
+
